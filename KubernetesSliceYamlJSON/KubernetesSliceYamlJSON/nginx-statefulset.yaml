@@ -1,0 +1,75 @@
+# ──────────── (1)  Namespace  ────────────
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nginx-sset
+---
+# ──────────── (2)  Headless Service (stable IDs)  ────────────
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-sset-headless
+  namespace: nginx-sset
+  labels:
+    app: nginx-sset
+spec:
+  clusterIP: None               # headless
+  selector:
+    app: nginx-sset
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+---
+# ──────────── (3)  ClusterIP Service (load-balancer)  ────────────
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-sset
+  namespace: nginx-sset
+  labels:
+    app: nginx-sset
+spec:
+  type: ClusterIP               # change to NodePort / LoadBalancer if desired
+  selector:
+    app: nginx-sset
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+---
+# ──────────── (4)  StatefulSet  ────────────
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nginx-sset
+  namespace: nginx-sset
+  labels:
+    app: nginx-sset
+spec:
+  serviceName: nginx-sset-headless   # must match the headless Service name
+  replicas: 3                        # <-- scale as needed
+  selector:
+    matchLabels:
+      app: nginx-sset
+  template:
+    metadata:
+      labels:
+        app: nginx-sset
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.27           # latest stable as of mid-2025
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: webroot
+              mountPath: /usr/share/nginx/html
+  volumeClaimTemplates:
+    - metadata:
+        name: webroot
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
