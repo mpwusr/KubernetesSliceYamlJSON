@@ -1,0 +1,23 @@
+[
+  {
+    "uri": "file:///Users/michaelwilliams/working/KubernetesSliceYamlJSON/KubernetesSliceYamlJSON/nginx-statefulset.yaml",
+    "action": "create",
+    "namespace": "test"
+  },
+  {
+    "uri": "https://raw.githubusercontent.com/kubernetes/website/main/content/en/examples/application/web/web.yaml",
+    "action": "create",
+    "namespace": "test"
+  },
+  {
+    "uri": "https://raw.githubusercontent.com/kubernetes/website/main/content/en/examples/deployments/deployment-with-configmap-as-volume.yaml",
+    "action": "create",
+    "namespace": "test"
+  },
+  {
+    "uri": "https://raw.githubusercontent.com/kubernetes/website/main/content/en/examples/pods/simple-pod.yaml",
+    "kind": "Pod",
+    "action": "create",
+    "namespace": "test"
+  }
+]

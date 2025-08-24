@@ -1,0 +1,44 @@
+run:
+  timeout: 5m
+  tests: true
+
+linters:
+  enable:
+    - govet
+    - revive
+    - staticcheck
+    - errcheck
+    - gosimple
+    - ineffassign
+    - typecheck
+    - gocritic
+    - gosec
+    - misspell
+    - exportloopref
+    - predeclared
+
+linters-settings:
+  revive:
+    rules:
+      - name: error-naming
+      - name: exported
+      - name: blank-imports
+      - name: if-return
+      - name: superfluous-else
+      - name: var-naming
+  misspell:
+    locale: US
+  gosec:
+    excludes:
+      - G115  # integer overflow false-positives common with resource quantities
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gosec
+  exclude:
+    - "ST1000: at least one file in a package should have a package comment" # staticcheck
+
+output:
+  sort-results: true
